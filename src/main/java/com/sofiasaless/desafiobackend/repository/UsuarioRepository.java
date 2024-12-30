@@ -8,6 +8,6 @@ import com.sofiasaless.desafiobackend.model.Usuario;
 
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findByCpf(String cpf);
+    Optional<Usuario> findByDocumentacao(String documentacao);
     Optional<Usuario> findByEmail(String email);
 }

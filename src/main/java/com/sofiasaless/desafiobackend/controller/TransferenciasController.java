@@ -6,22 +6,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sofiasaless.desafiobackend.model.Usuario;
-import com.sofiasaless.desafiobackend.useCase.CriarUsuariosUseCase;
+import com.sofiasaless.desafiobackend.dto.TransferenciaDTO;
+import com.sofiasaless.desafiobackend.useCase.TransferirValorUseCase;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/transferencia")
 @RequiredArgsConstructor
-public class UsuariosController {
+public class TransferenciasController {
     
-    private final CriarUsuariosUseCase criarUsuariosUseCase;
+    private final TransferirValorUseCase transferirValorUseCase;
 
-    @PostMapping("/cadastrar/usuario")
-    public ResponseEntity<Object> cadastrarUsuario (@RequestBody Usuario usuario) {
+    @PostMapping("/pagar")
+    public ResponseEntity<Object> realizarPagamento(@RequestBody TransferenciaDTO transferenciaDTO) throws Exception {
         try {
-            var result = this.criarUsuariosUseCase.criarUsuario(usuario);
+            var result = this.transferirValorUseCase.efetuarTransferencia(transferenciaDTO);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
