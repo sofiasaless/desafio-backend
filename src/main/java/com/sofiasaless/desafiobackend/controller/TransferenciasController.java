@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sofiasaless.desafiobackend.dto.TransferenciaDTO;
 import com.sofiasaless.desafiobackend.useCase.TransferirValorUseCase;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +20,7 @@ public class TransferenciasController {
     private final TransferirValorUseCase transferirValorUseCase;
 
     @PostMapping("/pagar")
-    public ResponseEntity<Object> realizarPagamento(@RequestBody TransferenciaDTO transferenciaDTO) throws Exception {
+    public ResponseEntity<Object> realizarPagamento(@Valid @RequestBody TransferenciaDTO transferenciaDTO) throws Exception {
         try {
             var result = this.transferirValorUseCase.transferirValor(transferenciaDTO);
             return ResponseEntity.ok().body(result);
