@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sofiasaless.desafiobackend.model.Usuario;
 import com.sofiasaless.desafiobackend.useCase.CriarUsuariosUseCase;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +20,7 @@ public class UsuariosController {
     private final CriarUsuariosUseCase criarUsuariosUseCase;
 
     @PostMapping("/cadastrar/usuario")
-    public ResponseEntity<Object> cadastrarUsuario (@RequestBody Usuario usuario) {
+    public ResponseEntity<Object> cadastrarUsuario (@Valid @RequestBody Usuario usuario) {
         try {
             var result = this.criarUsuariosUseCase.criarUsuario(usuario);
             return ResponseEntity.ok().body(result);
