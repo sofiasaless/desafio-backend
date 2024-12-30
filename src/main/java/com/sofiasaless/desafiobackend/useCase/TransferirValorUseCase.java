@@ -1,6 +1,8 @@
 package com.sofiasaless.desafiobackend.useCase;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.sofiasaless.desafiobackend.dto.TransferenciaDTO;
 import com.sofiasaless.desafiobackend.exception.UsuarioNaoEncontradoException;
@@ -21,6 +23,10 @@ public class TransferirValorUseCase {
 
     private final AtualizarSaldoUseCase atualizarSaldoUseCase;
 
+    @Value("${authentication.transf.url}")
+    private String urlAuth;
+
+    @Transactional(rollbackOn = Exception.class) // o transactional serve para transações, aqui estão acontecendo várias transação, mas caso aconteça algum erro, vai acontecer um rowback das informações
     public Transferencia efetuarTransferencia(TransferenciaDTO transferenciaDTO) throws Exception {
         // validar se os usuarios passados existem e são válidos (ex: usuario tentando transferir para ele mesmo, usuario lojista tentando fazer transferência)
         var pagador = this.usuarioRepository.findById(transferenciaDTO.getPagadorId()).orElseThrow(() -> {
@@ -48,6 +54,8 @@ public class TransferirValorUseCase {
                     .valor(transferenciaDTO.getValor())
                 .build();
 
+                autenticarTransacao();
+
                 return this.transferenciaRepository.save(transferencia);
             } else {
                 throw new Exception("Saldo insuficiente para transação!");   
@@ -62,5 +70,11 @@ public class TransferirValorUseCase {
     private boolean saldoValido(double saldoDoPagador, double valor) {
         return (saldoDoPagador > valor)?true:false;
     }
-
+    
+    private boolean autenticarTransacao() {
+        RestTemplate rt = new RestTemplate();
+        rt.getForObject(urlAuth, Object.class);
+        return true;
+    }
+    
 }
