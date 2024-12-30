@@ -1,5 +1,9 @@
 package com.sofiasaless.desafiobackend.model;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,5 +31,9 @@ public class Lojista {
     private String senha;
 
     private double saldo;
+
+    @CreationTimestamp
+    private LocalDateTime dataDeCriacao;
+
     
 }
