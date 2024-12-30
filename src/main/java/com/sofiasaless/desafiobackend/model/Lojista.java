@@ -19,10 +19,13 @@ public class Lojista {
     private String nome;
 
     @Column(unique = true)
-    private String cpf;
+    private String cnpj;
 
     @Column(unique = true)
     private String email;
     
     private String senha;
+
+    private double saldo;
+    
 }
