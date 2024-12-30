@@ -3,7 +3,6 @@ package com.sofiasaless.desafiobackend.useCase;
 import org.springframework.stereotype.Service;
 
 import com.sofiasaless.desafiobackend.model.Transferencia;
-import com.sofiasaless.desafiobackend.repository.LojistaRepository;
 import com.sofiasaless.desafiobackend.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class TransferirValorUseCase {
     
     private UsuarioRepository usuarioRepository;
-
-    private LojistaRepository lojistaRepository;
 
     public Transferencia efetuarTransferencia() {
         // validar se os usuarios passados existem e são válidos (ex: usuario tentando transferir para ele mesmo)

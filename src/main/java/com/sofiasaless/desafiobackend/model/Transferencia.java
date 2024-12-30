@@ -29,7 +29,7 @@ public class Transferencia {
     
     @ManyToOne
     @JoinColumn(name = "beneficiarioId", insertable = false, updatable = false)
-    private Lojista beneficiario;
+    private Usuario beneficiario;
 
     private Long pagadorId;
     private Long beneficiarioId;
