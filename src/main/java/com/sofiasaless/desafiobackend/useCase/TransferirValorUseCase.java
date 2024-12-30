@@ -2,25 +2,65 @@ package com.sofiasaless.desafiobackend.useCase;
 
 import org.springframework.stereotype.Service;
 
+import com.sofiasaless.desafiobackend.dto.TransferenciaDTO;
+import com.sofiasaless.desafiobackend.exception.UsuarioNaoEncontradoException;
 import com.sofiasaless.desafiobackend.model.Transferencia;
+import com.sofiasaless.desafiobackend.repository.TransferenciaRepository;
 import com.sofiasaless.desafiobackend.repository.UsuarioRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class TransferirValorUseCase {
     
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public Transferencia efetuarTransferencia() {
-        // validar se os usuarios passados existem e são válidos (ex: usuario tentando transferir para ele mesmo)
-        
-        
-        // validar se o pagador tem saldo suficiente para transferir
+    private final TransferenciaRepository transferenciaRepository;
 
+    private final AtualizarSaldoUseCase atualizarSaldoUseCase;
+
+    public Transferencia efetuarTransferencia(TransferenciaDTO transferenciaDTO) throws Exception {
+        // validar se os usuarios passados existem e são válidos (ex: usuario tentando transferir para ele mesmo, usuario lojista tentando fazer transferência)
+        var pagador = this.usuarioRepository.findById(transferenciaDTO.getPagadorId()).orElseThrow(() -> {
+            throw new UsuarioNaoEncontradoException("pagador");
+        });
+
+        var beneficiario = this.usuarioRepository.findById(transferenciaDTO.getBeneficiarioId()).orElseThrow(() -> {
+            throw new UsuarioNaoEncontradoException("beneficiário");
+        });
         
-        return null;
+        
+        if (pagador.getTipoDoUsuario().toString().equalsIgnoreCase("NORMAL")) {
+            // validar se o pagador tem saldo suficiente para transferir
+            if (saldoValido(pagador.getSaldo(), transferenciaDTO.getValor())) {
+
+                // atualizando os saldos dos usuários da transferência
+                this.atualizarSaldoUseCase.atualizarSaldo(pagador.getId(), pagador.getSaldo() - transferenciaDTO.getValor());
+                this.atualizarSaldoUseCase.atualizarSaldo(beneficiario.getId(), beneficiario.getSaldo() + transferenciaDTO.getValor());
+                
+                var transferencia = Transferencia.builder()
+                    .beneficiario(beneficiario)
+                    .pagador(pagador)
+                    .beneficiarioId(transferenciaDTO.getBeneficiarioId())
+                    .pagadorId(transferenciaDTO.getPagadorId())
+                    .valor(transferenciaDTO.getValor())
+                .build();
+
+                return this.transferenciaRepository.save(transferencia);
+            } else {
+                throw new Exception("Saldo insuficiente para transação!");   
+            }
+
+        } else {
+            throw new Exception("Usuário inválido para realizar transações!");
+        }
+
+    }
+
+    private boolean saldoValido(double saldoDoPagador, double valor) {
+        return (saldoDoPagador > valor)?true:false;
     }
 
 }
