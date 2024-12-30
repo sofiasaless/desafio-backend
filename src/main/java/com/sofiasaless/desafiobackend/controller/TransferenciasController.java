@@ -21,7 +21,7 @@ public class TransferenciasController {
     @PostMapping("/pagar")
     public ResponseEntity<Object> realizarPagamento(@RequestBody TransferenciaDTO transferenciaDTO) throws Exception {
         try {
-            var result = this.transferirValorUseCase.efetuarTransferencia(transferenciaDTO);
+            var result = this.transferirValorUseCase.transferirValor(transferenciaDTO);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
