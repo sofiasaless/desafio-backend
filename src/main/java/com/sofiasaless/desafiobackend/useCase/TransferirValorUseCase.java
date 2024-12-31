@@ -27,7 +27,8 @@ public class TransferirValorUseCase {
     @Value("${authentication.transf.url}")
     private String urlAuth;
 
-    @Transactional(rollbackOn = Exception.class) // o transactional serve para transações, aqui estão acontecendo várias transação, mas caso aconteça algum erro, vai acontecer um rowback das informações
+    @Transactional(rollbackOn = Exception.class) // caso aconteça de lançar alguma execeção de autorização do pagamento, o transactional é reponsável por administrar isso e fazer o rowback das informações que já tinham sido salvas
+    // se a transação passou por alguma interferência, o valor do dinheiro da transação volta para a conta do pagador
     public Transferencia transferirValor(TransferenciaDTO transferenciaDTO) throws Exception {
         // validar se os usuarios passados existem e são válidos (ex: usuario tentando transferir para ele mesmo, usuario lojista tentando fazer transferência)
         var pagador = this.usuarioRepository.findById(transferenciaDTO.getPagadorId()).orElseThrow(() -> {
