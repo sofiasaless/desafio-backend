@@ -36,6 +36,9 @@ public class TransferenciasController {
     @ApiResponses({
         @ApiResponse(responseCode = "200", content = {
             @Content(array = @ArraySchema(schema = @Schema(implementation = Transferencia.class)))
+        }),
+        @ApiResponse(responseCode = "400", content = {
+            @Content(array = @ArraySchema(schema = @Schema(implementation = BadRequestDTO.class)))
         })
     })
     @PostMapping("/pagar")
