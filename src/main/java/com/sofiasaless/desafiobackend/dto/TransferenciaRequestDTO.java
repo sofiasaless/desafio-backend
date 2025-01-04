@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransferenciaDTO {
+public class TransferenciaRequestDTO {
 
     @Positive(message = "Insiria um valor maior que zero!")
     @NotNull(message = "Campo valor nao pode ser nulo")

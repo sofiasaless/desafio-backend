@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sofiasaless.desafiobackend.dto.BadRequestDTO;
-import com.sofiasaless.desafiobackend.dto.TransferenciaDTO;
+import com.sofiasaless.desafiobackend.dto.BadRequestResponseDTO;
+import com.sofiasaless.desafiobackend.dto.TransferenciaRequestDTO;
+import com.sofiasaless.desafiobackend.dto.TransferenciaResponseDTO;
+import com.sofiasaless.desafiobackend.dto.UsuarioResponseDTO;
 import com.sofiasaless.desafiobackend.model.Transferencia;
 import com.sofiasaless.desafiobackend.useCase.TransferirValorUseCase;
 
@@ -35,19 +37,19 @@ public class TransferenciasController {
     )
     @ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(array = @ArraySchema(schema = @Schema(implementation = Transferencia.class)))
+            @Content(array = @ArraySchema(schema = @Schema(implementation = TransferenciaResponseDTO.class)))
         }),
         @ApiResponse(responseCode = "400", content = {
-            @Content(array = @ArraySchema(schema = @Schema(implementation = BadRequestDTO.class)))
+            @Content(array = @ArraySchema(schema = @Schema(implementation = BadRequestResponseDTO.class)))
         })
     })
     @PostMapping("/pagar")
-    public ResponseEntity<Object> realizarPagamento(@Valid @RequestBody TransferenciaDTO transferenciaDTO) throws Exception {
+    public ResponseEntity<Object> realizarPagamento(@Valid @RequestBody TransferenciaRequestDTO transferenciaDTO) throws Exception {
         try {
             var result = this.transferirValorUseCase.transferirValor(transferenciaDTO);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new BadRequestDTO(e.getMessage()));
+            return ResponseEntity.badRequest().body(new BadRequestResponseDTO(e.getMessage()));
         }
     }
 

@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.sofiasaless.desafiobackend.dto.TransferenciaDTO;
+import com.sofiasaless.desafiobackend.dto.TransferenciaRequestDTO;
+import com.sofiasaless.desafiobackend.dto.TransferenciaResponseDTO;
+import com.sofiasaless.desafiobackend.dto.UsuarioResponseDTO;
 import com.sofiasaless.desafiobackend.exception.UsuarioNaoEncontradoException;
 import com.sofiasaless.desafiobackend.model.Transferencia;
 import com.sofiasaless.desafiobackend.model.Usuario;
@@ -29,7 +31,7 @@ public class TransferirValorUseCase {
 
     @Transactional(rollbackOn = Exception.class) // caso aconteça de lançar alguma execeção de autorização do pagamento, o transactional é reponsável por administrar isso e fazer o rowback das informações que já tinham sido salvas
     // se a transação passou por alguma interferência, o valor do dinheiro da transação volta para a conta do pagador
-    public Transferencia transferirValor(TransferenciaDTO transferenciaDTO) throws Exception {
+    public TransferenciaResponseDTO transferirValor(TransferenciaRequestDTO transferenciaDTO) throws Exception {
         // validar se os usuarios passados existem e são válidos (ex: usuario tentando transferir para ele mesmo, usuario lojista tentando fazer transferência)
         var pagador = this.usuarioRepository.findById(transferenciaDTO.getPagadorId()).orElseThrow(() -> {
             throw new UsuarioNaoEncontradoException("pagador");
@@ -56,7 +58,15 @@ public class TransferirValorUseCase {
 
         autenticarTransacao();
 
-        return this.transferenciaRepository.save(transferencia);
+        this.transferenciaRepository.save(transferencia);
+
+        return TransferenciaResponseDTO.builder()
+            .id(transferencia.getId())
+            .valor(transferencia.getValor())
+            .pagador(new UsuarioResponseDTO(transferencia.getPagador().getId(), transferencia.getPagador().getNome()))
+            .beneficiario(new UsuarioResponseDTO(transferencia.getBeneficiario().getId(), transferencia.getBeneficiario().getNome()))
+        .build();
+
     }
 
     private boolean validarUsuarioPagador (Usuario usuarioPagador, double valorTransferencia) throws Exception {

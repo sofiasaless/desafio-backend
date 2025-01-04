@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BadRequestDTO {
+public class BadRequestResponseDTO {
 
     @Schema(example = "Usuário beneficiário não identificado!", requiredMode = RequiredMode.REQUIRED)
     private String mensagem;
