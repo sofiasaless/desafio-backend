@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sofiasaless.desafiobackend.dto.BadRequestResponseDTO;
+import com.sofiasaless.desafiobackend.dto.UsuarioRequestDTO;
 import com.sofiasaless.desafiobackend.model.Usuario;
 import com.sofiasaless.desafiobackend.useCase.CriarUsuariosUseCase;
 
@@ -38,7 +39,7 @@ public class UsuariosController {
         })
     })
     @PostMapping("/cadastrar/usuario")
-    public ResponseEntity<Object> cadastrarUsuario (@Valid @RequestBody Usuario usuario) {
+    public ResponseEntity<Object> cadastrarUsuario (@Valid @RequestBody UsuarioRequestDTO usuario) {
         try {
             var result = this.criarUsuariosUseCase.criarUsuario(usuario);
             return ResponseEntity.ok().body(result);
