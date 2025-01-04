@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BadRequestDTO {
 
-    @Schema(example = "Saldo insuficiente para transferência!", requiredMode = RequiredMode.REQUIRED)
+    @Schema(example = "Usuário beneficiário não identificado!", requiredMode = RequiredMode.REQUIRED)
     private String mensagem;
 }

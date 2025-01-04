@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Transferências", description = "Pontos relacionados a transferência entre usuários")
+@Tag(name = "Transferências", description = "Pontos relacionados a transferências/pagamentos entre usuários")
 @RestController
 @RequestMapping("/transferencia")
 @RequiredArgsConstructor

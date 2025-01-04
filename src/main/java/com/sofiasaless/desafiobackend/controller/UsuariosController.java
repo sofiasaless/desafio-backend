@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Cadastros", description = "Pontos relacionados a para cadastro de um usuário")
+@Tag(name = "Cadastros", description = "Pontos relacionados ao cadastros de usuários")
 @RestController
 @RequestMapping("/")
 @RequiredArgsConstructor
