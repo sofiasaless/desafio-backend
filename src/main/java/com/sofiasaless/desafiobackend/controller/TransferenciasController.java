@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sofiasaless.desafiobackend.dto.BadRequestResponseDTO;
 import com.sofiasaless.desafiobackend.dto.TransferenciaRequestDTO;
 import com.sofiasaless.desafiobackend.dto.TransferenciaResponseDTO;
-import com.sofiasaless.desafiobackend.dto.UsuarioResponseDTO;
-import com.sofiasaless.desafiobackend.model.Transferencia;
 import com.sofiasaless.desafiobackend.useCase.TransferirValorUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
