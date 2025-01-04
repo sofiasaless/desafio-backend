@@ -1,6 +1,12 @@
 package com.sofiasaless.desafiobackend.useCase;
 
+import java.util.Map;
+
+import javax.swing.text.html.parser.Entity;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -80,10 +86,15 @@ public class TransferirValorUseCase {
         }
     }
     
-    private boolean autenticarTransacao() {
+    private void autenticarTransacao() throws Exception {
         RestTemplate rt = new RestTemplate();
-        rt.getForObject(urlAuth, Object.class);
-        return true;
+
+        try {
+           rt.getForEntity(urlAuth, Map.class);            
+        } catch (Exception e) {
+            throw new Exception("Transferência não autorizada!");
+        }
+        
     }
     
 }
