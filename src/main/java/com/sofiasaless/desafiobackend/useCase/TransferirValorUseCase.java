@@ -9,7 +9,10 @@ import org.springframework.web.client.RestTemplate;
 import com.sofiasaless.desafiobackend.dto.TransferenciaRequestDTO;
 import com.sofiasaless.desafiobackend.dto.TransferenciaResponseDTO;
 import com.sofiasaless.desafiobackend.dto.UsuarioResponseDTO;
+import com.sofiasaless.desafiobackend.exception.SaldoInsuficienteException;
+import com.sofiasaless.desafiobackend.exception.TransferenciaNaoAutorizadaException;
 import com.sofiasaless.desafiobackend.exception.UsuarioNaoEncontradoException;
+import com.sofiasaless.desafiobackend.exception.UsuarioPagadorInvalidoException;
 import com.sofiasaless.desafiobackend.model.Transferencia;
 import com.sofiasaless.desafiobackend.model.Usuario;
 import com.sofiasaless.desafiobackend.repository.TransferenciaRepository;
@@ -74,11 +77,13 @@ public class TransferirValorUseCase {
     private boolean validarUsuarioPagador (Usuario usuarioPagador, double valorTransferencia) throws Exception {
         if (usuarioPagador.getTipoDoUsuario().toString().equalsIgnoreCase("NORMAL")) {
             if (usuarioPagador.getSaldo() < valorTransferencia) {
-                throw new Exception("Saldo insuficiente para realizar transação!");
+                // throw new Exception("Saldo insuficiente para realizar transação!");
+                throw new SaldoInsuficienteException();
             }
             return true;
         } else {
-            throw new Exception("Usuários Lojistas não são autorizados de realizar transações!");
+            // throw new Exception("Usuários Lojistas não são autorizados de realizar transações!");
+            throw new UsuarioPagadorInvalidoException();
         }
     }
     
@@ -88,7 +93,8 @@ public class TransferirValorUseCase {
         try {
            rt.getForEntity(urlAuth, Map.class);            
         } catch (Exception e) {
-            throw new Exception("Transferência não autorizada!");
+            // throw new Exception("Transferência não autorizada!");
+            throw new TransferenciaNaoAutorizadaException();
         }
         
     }
