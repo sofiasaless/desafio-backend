@@ -32,6 +32,7 @@ public class UsuarioRequestDTO {
     @Schema(example = "001.002.003-99", requiredMode = RequiredMode.REQUIRED)
     private String documentacao;
 
+    @NotEmpty(message = "Preencha o campo documentação")
     @Email(message = "Insira um e-mail válido")
     @Schema(example = "eddardstark@email.com", requiredMode = RequiredMode.REQUIRED)
     private String email;
