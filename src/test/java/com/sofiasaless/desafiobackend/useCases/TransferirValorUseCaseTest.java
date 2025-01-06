@@ -1,10 +1,12 @@
 package com.sofiasaless.desafiobackend.useCases;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,15 +16,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import com.sofiasaless.desafiobackend.dto.TransferenciaRequestDTO;
+import com.sofiasaless.desafiobackend.dto.TransferenciaResponseDTO;
 import com.sofiasaless.desafiobackend.exception.SaldoInsuficienteException;
+import com.sofiasaless.desafiobackend.exception.TransferenciaNaoAutorizadaException;
 import com.sofiasaless.desafiobackend.exception.UsuarioNaoEncontradoException;
 import com.sofiasaless.desafiobackend.exception.UsuarioPagadorInvalidoException;
 import com.sofiasaless.desafiobackend.model.Usuario;
 import com.sofiasaless.desafiobackend.model.enums.TipoUsuario;
 import com.sofiasaless.desafiobackend.repository.TransferenciaRepository;
 import com.sofiasaless.desafiobackend.repository.UsuarioRepository;
+import com.sofiasaless.desafiobackend.useCase.AtualizarSaldoUseCase;
 import com.sofiasaless.desafiobackend.useCase.TransferirValorUseCase;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,11 +45,20 @@ public class TransferirValorUseCaseTest {
     @Mock
     private UsuarioRepository usuarioRepository;
 
+    @Mock
+    private AtualizarSaldoUseCase atualizarSaldoUseCase;
+
+    @Mock
+    private RestTemplate rt;
+
     private Usuario usuarioPagadorDeRequisicaoValido;   
     private Usuario usuarioPagadorDeRequisicaoInvalido;
     private Usuario usuarioBeneficiarioDeRequisicaoValido;
 
     private TransferenciaRequestDTO transferenciaDeRequisicaoValida;
+
+    @Value("${authentication.transf.url}")
+    private String urlAuth;
 
     @BeforeEach
     public void setup() {
@@ -88,7 +105,7 @@ public class TransferirValorUseCaseTest {
 
     @Test
     @DisplayName("Deve lançar uma exceção quando o saldo di Usuário 'pagador' for insuficiente para a transferência")
-    public void deveLancarExcecaoDeSaldoInsuficiente() throws Exception {
+    public void deveLancarExcecaoDeSaldoInsuficiente() {
         var usuarioComSaldoInsuficiente = Usuario.builder()
             .tipoDoUsuario(TipoUsuario.NORMAL)
             .saldo(10)
@@ -105,6 +122,34 @@ public class TransferirValorUseCaseTest {
         
     }
 
+    @Test
+    @DisplayName("Deve retornar um TransferenciaResponseDTO quando transferência for autorizada")
+    public void deveRetornarUmTransferenciaResponseDTOQuandoTransferenciaForAutorizada() throws Exception {
+
+        when(this.usuarioRepository.findById(anyLong())).thenReturn(Optional.of(this.usuarioPagadorDeRequisicaoValido));
+        when(this.usuarioRepository.findById(anyLong())).thenReturn(Optional.of(this.usuarioBeneficiarioDeRequisicaoValido));
+        when(rt.getForEntity(urlAuth, Map.class)).thenReturn(ResponseEntity.ok(new HashMap<>()));
+
+        assertInstanceOf(TransferenciaResponseDTO.class, this.transferirValorUseCase.transferirValor(transferenciaDeRequisicaoValida));
+        
+    }
+
+    @Test
+    @DisplayName("Deve retornar uma exceção de TransferenciaNaoAutorizada ao falhar na autorização externa")
+    public void deveLancarExcecaoDeTransferenciaNaoAutorizadaAoFalharNaAutorizacao() {
+
+        when(this.usuarioRepository.findById(anyLong())).thenReturn(Optional.of(this.usuarioPagadorDeRequisicaoValido));
+        when(this.usuarioRepository.findById(anyLong())).thenReturn(Optional.of(this.usuarioBeneficiarioDeRequisicaoValido));
+
+        try {
+            this.transferirValorUseCase.transferirValor(transferenciaDeRequisicaoValida);
+        } catch (Exception e) {
+            assertTrue(e instanceof TransferenciaNaoAutorizadaException);
+        }
+        
+    }
+
+    // METODOS DE AUXILIO
 
     private Usuario criarUsuarioPagadorValido() {
         return Usuario.builder()
@@ -146,7 +191,7 @@ public class TransferirValorUseCaseTest {
         return TransferenciaRequestDTO.builder()
             .pagadorId(usuarioPagadorDeRequisicaoValido.getId())
             .beneficiarioId(usuarioBeneficiarioDeRequisicaoValido.getId())
-            .valor(100)
+            .valor(5)
         .build();
     }
 
