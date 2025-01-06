@@ -2,6 +2,7 @@ package com.sofiasaless.desafiobackend.useCase;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,6 +34,8 @@ public class TransferirValorUseCase {
 
     @Value("${authentication.transf.url}")
     private String urlAuth;
+
+    private final RestTemplate restTemplate;
 
     @Transactional(rollbackOn = Exception.class) // caso aconteça de lançar alguma execeção de autorização do pagamento, o transactional é reponsável por administrar isso e fazer o rowback das informações que já tinham sido salvas
     // se a transação passou por alguma interferência, o valor do dinheiro da transação volta para a conta do pagador
@@ -88,10 +91,9 @@ public class TransferirValorUseCase {
     }
     
     private void autenticarTransacao() throws Exception {
-        RestTemplate rt = new RestTemplate();
-
+        
         try {
-           rt.getForEntity(urlAuth, Map.class);            
+            restTemplate.getForEntity(urlAuth, Map.class);            
         } catch (Exception e) {
             // throw new Exception("Transferência não autorizada!");
             throw new TransferenciaNaoAutorizadaException();
