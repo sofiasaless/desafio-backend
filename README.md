@@ -43,7 +43,7 @@ Acesse a API em [http://localhost:8080](http://localhost:8080)
 #### Criação de usuários normais e usuários lojistas
 
 ```bash
-POST - http://localhost:8080/cadastrar/usuario
+POST - http://localhost:8080/usuarios/cadastrar
 ```
 
 ```json
@@ -77,9 +77,55 @@ POST - http://localhost:8080/transferencia/pagar
 ```json
 {
   "valor":20,
-  "pagadorId":3,
-  "beneficiarioId":4
+  "pagadorId":1,
+  "beneficiarioId":2
 }
+```
+
+#### Busca de usuários por id
+
+```bash
+GET - http://localhost:8080/usuarios/id/1
+```
+
+```json
+{
+  "nome":"Eddard Stark",
+  "documentacao":"029.322.394-09",
+  "email":"winterfell@hotmail.com",
+  "saldo":100,
+  "tipoDoUsuario":"NORMAL"
+}
+```
+
+#### Busca de todos usuários cadastrados
+
+```bash
+GET - http://localhost:8080/usuarios/visualizar
+```
+
+```json
+[
+    {   
+        "id":1,
+        "nome":"Eddard Stark",
+        "documentacao":"029.322.394-09",
+        "email":"winterfell@hotmail.com",
+        "saldo":100,
+        "tipoDoUsuario":"NORMAL",
+        "dataDeCriacao": "2025-01-06T21:16:11.009707"
+    },
+    {
+        "id":2,
+        "nome":"Cersei Lannister",
+        "documentacao":"237.986.001-98",
+        "email":"joffreyMyrcTomm@gmail.com",
+        "senha":"832901l",
+        "saldo":9200,
+        "tipoDoUsuario":"LOJISTA",
+        "dataDeCriacao": "2025-01-06T21:16:11.009707"
+    }
+]
 ```
 
 #### Acesso a documentação da API
