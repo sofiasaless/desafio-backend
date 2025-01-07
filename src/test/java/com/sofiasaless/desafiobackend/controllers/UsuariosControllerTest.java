@@ -38,22 +38,22 @@ public class UsuariosControllerTest {
     }
 
     @Test
-    public void deveEstarAptoASalvarUmNovoUsuario() throws Exception {
+    public void deveRetonarStatusOkQuandoBemSucedido() throws Exception {
         var novoUsuario = criarUsuarioDTOValido();
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/cadastrar/usuario")
+            MockMvcRequestBuilders.post("/usuarios/cadastrar")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objetoParaJson(novoUsuario))
         ).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    public void naoDeveEstarAptoASalvarUmNovoUsuarioComCamposVazios() throws Exception {
+    public void deveRetonarStatusBadRequestQuandoPassadoCamposInvalidos() throws Exception {
         var novoUsuario = criarUsuarioDTOComCamposVazios();
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/cadastrar/usuario")
+            MockMvcRequestBuilders.post("/usuarios/cadastrar")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objetoParaJson(novoUsuario))
         ).andExpect(MockMvcResultMatchers.status().isBadRequest());
