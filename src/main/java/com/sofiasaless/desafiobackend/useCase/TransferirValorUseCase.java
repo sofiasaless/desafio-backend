@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.sofiasaless.desafiobackend.dto.TransferenciaRequestDTO;
 import com.sofiasaless.desafiobackend.dto.TransferenciaResponseDTO;
-import com.sofiasaless.desafiobackend.dto.UsuarioResponseDTO;
+import com.sofiasaless.desafiobackend.dto.UsuarioTransferResponseDTO;
 import com.sofiasaless.desafiobackend.exception.SaldoInsuficienteException;
 import com.sofiasaless.desafiobackend.exception.TransferenciaNaoAutorizadaException;
 import com.sofiasaless.desafiobackend.exception.UsuarioNaoEncontradoException;
@@ -70,8 +70,8 @@ public class TransferirValorUseCase {
         return TransferenciaResponseDTO.builder()
             .id(transferencia.getId())
             .valor(transferencia.getValor())
-            .pagador(new UsuarioResponseDTO(transferencia.getPagador().getId(), transferencia.getPagador().getNome()))
-            .beneficiario(new UsuarioResponseDTO(transferencia.getBeneficiario().getId(), transferencia.getBeneficiario().getNome()))
+            .pagador(new UsuarioTransferResponseDTO(transferencia.getPagador().getId(), transferencia.getPagador().getNome()))
+            .beneficiario(new UsuarioTransferResponseDTO(transferencia.getBeneficiario().getId(), transferencia.getBeneficiario().getNome()))
         .build();
 
     }
