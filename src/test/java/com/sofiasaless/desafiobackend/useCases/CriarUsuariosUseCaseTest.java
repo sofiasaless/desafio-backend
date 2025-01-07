@@ -41,7 +41,7 @@ public class CriarUsuariosUseCaseTest {
     }
 
     @Test
-    @DisplayName("Deve retornar um Usuário ao efetuar um cadastro bem sucessido")
+    @DisplayName("Deve retornar um Usuário ao efetuar um cadastro bem sucedido")
     public void deveRetornarUmUsuarioAoEfetuarCadastroBemSucedido() {
         when(this.usuarioRepository.findByEmail(usuarioDeRequisicaoValido.getEmail())).thenReturn(Optional.empty());
         when(this.usuarioRepository.findByDocumentacao(usuarioDeRequisicaoValido.getDocumentacao())).thenReturn(Optional.empty());

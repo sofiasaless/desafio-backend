@@ -38,7 +38,7 @@ public class UsuariosControllerTest {
     }
 
     @Test
-    public void deveEstarAptoASalvarUmNovoUsuario() throws Exception {
+    public void deveRetonarStatusOkQuandoBemSucedido() throws Exception {
         var novoUsuario = criarUsuarioDTOValido();
 
         mvc.perform(
@@ -49,7 +49,7 @@ public class UsuariosControllerTest {
     }
 
     @Test
-    public void naoDeveEstarAptoASalvarUmNovoUsuarioComCamposVazios() throws Exception {
+    public void deveRetonarStatusBadRequestQuandoPassadoCamposInvalidos() throws Exception {
         var novoUsuario = criarUsuarioDTOComCamposVazios();
 
         mvc.perform(
