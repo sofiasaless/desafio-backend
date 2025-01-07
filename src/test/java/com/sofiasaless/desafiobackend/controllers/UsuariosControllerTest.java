@@ -42,7 +42,7 @@ public class UsuariosControllerTest {
         var novoUsuario = criarUsuarioDTOValido();
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/cadastrar/usuario")
+            MockMvcRequestBuilders.post("/usuarios/cadastrar")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objetoParaJson(novoUsuario))
         ).andExpect(MockMvcResultMatchers.status().isOk());
@@ -53,7 +53,7 @@ public class UsuariosControllerTest {
         var novoUsuario = criarUsuarioDTOComCamposVazios();
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/cadastrar/usuario")
+            MockMvcRequestBuilders.post("/usuarios/cadastrar")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objetoParaJson(novoUsuario))
         ).andExpect(MockMvcResultMatchers.status().isBadRequest());

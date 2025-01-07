@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Cadastros", description = "Pontos relacionados ao cadastros de usuários")
 @RestController
-@RequestMapping("/")
+@RequestMapping("/usuarios")
 @RequiredArgsConstructor
 public class UsuariosController {
     
@@ -46,7 +46,7 @@ public class UsuariosController {
             @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class)))
         })
     })
-    @PostMapping("/cadastrar/usuario")
+    @PostMapping("/cadastrar")
     public ResponseEntity<Object> cadastrarUsuario (@Valid @RequestBody UsuarioRequestDTO usuario) {
         try {
             var result = this.criarUsuariosUseCase.criarUsuario(usuario);
@@ -56,7 +56,7 @@ public class UsuariosController {
         }
     }
 
-    @GetMapping("/visualizar/usuario/{id}")
+    @GetMapping("/visualizar/id/{id}")
     public ResponseEntity<Object> visualizarUsuario(@PathVariable long id) {
         try {
             var result = this.visualizarUsuarioUseCase.visualizarUsuario(id);
@@ -66,19 +66,19 @@ public class UsuariosController {
         }
     }
 
-    @GetMapping("/visualizar/usuarios")
+    @GetMapping("/visualizar")
     public ResponseEntity<List<Usuario>> visualizarTodosUsuario() {
         var result = this.visualizarUsuarioUseCase.visualizarTodosUsuarios();
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/visualizar/usuarios/lojistas")
+    @GetMapping("/visualizar/lojistas")
     public ResponseEntity<List<Usuario>> visualizarTodosUsuariosLojistas() {
         var result = this.visualizarUsuarioUseCase.visualizarUsuariosPorTipo(TipoUsuario.LOJISTA);
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/visualizar/usuarios/normais")
+    @GetMapping("/visualizar/normais")
     public ResponseEntity<List<Usuario>> visualizarTodosUsuariosNormais() {
         var result = this.visualizarUsuarioUseCase.visualizarUsuariosPorTipo(TipoUsuario.NORMAL);
         return ResponseEntity.ok().body(result);
