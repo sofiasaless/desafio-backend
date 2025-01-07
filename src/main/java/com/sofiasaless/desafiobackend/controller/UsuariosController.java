@@ -1,6 +1,10 @@
 package com.sofiasaless.desafiobackend.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sofiasaless.desafiobackend.dto.BadRequestResponseDTO;
 import com.sofiasaless.desafiobackend.dto.UsuarioRequestDTO;
 import com.sofiasaless.desafiobackend.model.Usuario;
+import com.sofiasaless.desafiobackend.model.enums.TipoUsuario;
 import com.sofiasaless.desafiobackend.useCase.CriarUsuariosUseCase;
+import com.sofiasaless.desafiobackend.useCase.VisualizarUsuarioUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -29,6 +35,8 @@ public class UsuariosController {
     
     private final CriarUsuariosUseCase criarUsuariosUseCase;
 
+    private final VisualizarUsuarioUseCase visualizarUsuarioUseCase;
+
     @Operation(
         summary = "Realizar cadastro de novos usuários", 
         description = "Essa função é reponsável por cadastrar usuários de tipo NORMAL e LOJISTA"
@@ -46,6 +54,34 @@ public class UsuariosController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new BadRequestResponseDTO(e.getMessage()));
         }
+    }
+
+    @GetMapping("/visualizar/usuario/{id}")
+    public ResponseEntity<Object> visualizarUsuario(@PathVariable long id) {
+        try {
+            var result = this.visualizarUsuarioUseCase.visualizarUsuario(id);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new BadRequestResponseDTO(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/visualizar/usuarios")
+    public ResponseEntity<List<Usuario>> visualizarTodosUsuario() {
+        var result = this.visualizarUsuarioUseCase.visualizarTodosUsuarios();
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/visualizar/usuarios/lojistas")
+    public ResponseEntity<List<Usuario>> visualizarTodosUsuariosLojistas() {
+        var result = this.visualizarUsuarioUseCase.visualizarUsuariosPorTipo(TipoUsuario.LOJISTA);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/visualizar/usuarios/normais")
+    public ResponseEntity<List<Usuario>> visualizarTodosUsuariosNormais() {
+        var result = this.visualizarUsuarioUseCase.visualizarUsuariosPorTipo(TipoUsuario.NORMAL);
+        return ResponseEntity.ok().body(result);
     }
 
 }

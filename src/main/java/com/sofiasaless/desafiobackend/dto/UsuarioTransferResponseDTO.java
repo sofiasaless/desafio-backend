@@ -10,15 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class TransferenciaResponseDTO {
+public class UsuarioTransferResponseDTO {
 
-    @Schema(example = "932")
+    @Schema(example = "7")
     private Long id;
-
-    @Schema(example = "87.23")
-    private double valor;
-
-    private UsuarioTransferResponseDTO pagador;
-    private UsuarioTransferResponseDTO beneficiario;
-
+    @Schema(example = "João")
+    private String nome;
 }

@@ -1,19 +1,22 @@
 package com.sofiasaless.desafiobackend.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.sofiasaless.desafiobackend.model.enums.TipoUsuario;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Builder
 public class UsuarioResponseDTO {
 
-    @Schema(example = "7")
-    private Long id;
-    @Schema(example = "João")
     private String nome;
+    private String documentacao;
+    private String email;
+    private double saldo;
+    private TipoUsuario tipoDoUsuario;
+
 }
